@@ -5,7 +5,7 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').unique()
+      table.increments('id')
       table.string('title')
       table.text('description')
       table.string('category')
@@ -13,7 +13,7 @@ export default class extends BaseSchema {
       table.decimal('discount_percentage', 5, 2)
       table.decimal('rating', 3, 2)
       table.integer('stock')
-      table.json('tags')
+      table.specificType('tags', 'text[]')
       table.string('brand')
       table.string('sku')
       table.float('weight')
@@ -21,16 +21,16 @@ export default class extends BaseSchema {
       table.float('height')
       table.float('depth')
       table.string('warranty_information')
-      table.string('shipping_information')
+      table.text('shipping_information')
       table.string('availability_status')
-      table.json('reviews')
+      table.text('reviews')
       table.string('return_policy')
       table.integer('minimum_order_quantity')
       table.timestamp('meta_created_at')
       table.timestamp('meta_updated_at')
       table.string('barcode')
       table.string('qr_code')
-      table.json('images')
+      table.specificType('images', 'text[]')
       table.string('thumbnail')
 
       table.timestamp('created_at')

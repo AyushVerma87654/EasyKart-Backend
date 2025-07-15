@@ -17,7 +17,7 @@ export default class Product extends BaseModel {
   @column()
   declare price: number
 
-  @column()
+  @column({ columnName: 'discount_percentage' })
   declare discountPercentage: number
 
   @column()
@@ -47,34 +47,34 @@ export default class Product extends BaseModel {
   @column()
   declare depth: number
 
-  @column()
+  @column({ columnName: 'warranty_information' })
   declare warrantyInformation: string
 
-  @column()
+  @column({ columnName: 'shipping_information' })
   declare shippingInformation: string
 
-  @column()
+  @column({ columnName: 'availability_status' })
   declare availabilityStatus: string
 
   @column()
-  declare reviews: any[]
+  declare reviews: string
 
-  @column()
+  @column({ columnName: 'return_policy' })
   declare returnPolicy: string
 
-  @column()
+  @column({ columnName: 'minimum_order_quantity' })
   declare minimumOrderQuantity: number
 
-  @column()
+  @column({ columnName: 'meta_created_at' })
   declare metaCreatedAt: Date
 
-  @column()
+  @column({ columnName: 'meta_updated_at' })
   declare metaUpdatedAt: Date
 
   @column()
   declare barcode: string
 
-  @column()
+  @column({ columnName: 'qr_code' })
   declare qrCode: string
 
   @column()
