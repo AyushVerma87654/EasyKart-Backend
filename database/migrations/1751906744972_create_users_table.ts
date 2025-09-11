@@ -14,6 +14,7 @@ export default class extends BaseSchema {
       table.string('refresh_token')
       table.boolean('is_verified')
       table.boolean('is_updating_profile')
+      table.string('verification_code')
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

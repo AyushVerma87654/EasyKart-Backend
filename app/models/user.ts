@@ -22,7 +22,10 @@ export default class User extends BaseModel {
   declare isVerified: boolean
 
   @column({ serializeAs: null })
-  declare isUpdatingProfile: string
+  declare isUpdatingProfile: boolean
+
+  @column({ serializeAs: null })
+  declare verificationCode: string
 
   @column({ serializeAs: null })
   declare accessToken: string

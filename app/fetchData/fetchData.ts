@@ -1,5 +1,7 @@
+import Coupon from '#models/coupon'
 import Product from '#models/product'
 import { getAllProductById, getAllProducts } from './api/products.js'
+import { DateTime } from 'luxon'
 
 export const fetchAllProducts = async () => {
   const data = await getAllProducts()
@@ -7,6 +9,7 @@ export const fetchAllProducts = async () => {
 
   try {
     await Product.updateOrCreateMany('id', validatedData)
+    return data.total
   } catch (error: any) {
     console.log(error)
   }
@@ -25,6 +28,15 @@ export const fetchProductById = async () => {
     )
   } catch (error: any) {
     console.log(error)
+  }
+}
+
+export const saveCouponTableData = async () => {
+  try {
+    const data = await Coupon.updateOrCreateMany('couponCode', couponTableData)
+    console.log('data', data)
+  } catch (error) {
+    console.log('error at coupons', error)
   }
 }
 
@@ -67,3 +79,66 @@ const validateData = (data: any) => {
     thumbnail: data.thumbnail,
   }
 }
+
+export const couponTableData = [
+  {
+    couponCode: 'WELCOME10',
+    discountPercentage: 10,
+    expiresAt: DateTime.fromISO('2025-12-31T23:59:59'),
+    isActive: true,
+  },
+  {
+    couponCode: 'FESTIVE25',
+    discountPercentage: 25,
+    expiresAt: DateTime.fromISO('2025-11-15T23:59:59'),
+    isActive: true,
+  },
+  {
+    couponCode: 'SUMMER15',
+    discountPercentage: 15,
+    expiresAt: DateTime.fromISO('2025-09-30T23:59:59'),
+    isActive: true,
+  },
+  {
+    couponCode: 'FLASH50',
+    discountPercentage: 50,
+    expiresAt: DateTime.fromISO('2025-08-31T23:59:59'),
+    isActive: false,
+  },
+  {
+    couponCode: 'DIWALI20',
+    discountPercentage: 20,
+    expiresAt: DateTime.fromISO('2025-11-10T23:59:59'),
+    isActive: true,
+  },
+  {
+    couponCode: 'NEWUSER30',
+    discountPercentage: 30,
+    expiresAt: DateTime.fromISO('2026-01-01T23:59:59'),
+    isActive: true,
+  },
+  {
+    couponCode: 'FREESHIP',
+    discountPercentage: 5,
+    expiresAt: DateTime.fromISO('2025-12-31T23:59:59'),
+    isActive: true,
+  },
+  {
+    couponCode: 'WEEKEND40',
+    discountPercentage: 40,
+    expiresAt: DateTime.fromISO('2025-09-15T23:59:59'),
+    isActive: false,
+  },
+  {
+    couponCode: 'LOYALTY35',
+    discountPercentage: 35,
+    expiresAt: DateTime.fromISO('2025-10-31T23:59:59'),
+    isActive: true,
+  },
+  {
+    couponCode: 'SPRING22',
+    discountPercentage: 22,
+    expiresAt: DateTime.fromISO('2025-09-20T23:59:59'),
+    isActive: true,
+  },
+]

@@ -56,7 +56,10 @@ export default class Product extends BaseModel {
   @column({ columnName: 'availability_status' })
   declare availabilityStatus: string
 
-  @column()
+  @column({
+    prepare: (value: object) => JSON.stringify(value), // save as string
+    consume: (value: string) => JSON.parse(value), // read as object
+  })
   declare reviews: string
 
   @column({ columnName: 'return_policy' })
