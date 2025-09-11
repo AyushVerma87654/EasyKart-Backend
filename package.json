@@ -5,8 +5,8 @@
   "type": "module",
   "license": "UNLICENSED",
   "scripts": {
-    "start": "node bin/server.js",
     "build": "node ace build",
+    "start": "node build/server.js",
     "dev": "node ace serve --hmr",
     "test": "node ace test",
     "lint": "eslint .",
@@ -65,6 +65,7 @@
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.6.1",
     "pg": "^8.16.3",
+    "ts-node-maintained": "^10.9.5",
     "reflect-metadata": "^0.2.2"
   },
   "hotHook": {
