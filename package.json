@@ -52,7 +52,6 @@
     "typescript": "~5.8"
   },
   "dependencies": {
-    "@adonisjs/auth": "^9.4.0",
     "@adonisjs/core": "^6.18.0",
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/hash": "8.3.1-9",
@@ -64,8 +63,8 @@
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.6.1",
     "pg": "^8.16.3",
-    "ts-node-maintained": "^10.9.5",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "ts-node-maintained": "^10.9.5"
   },
   "hotHook": {
     "boundaries": [
