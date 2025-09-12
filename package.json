@@ -77,6 +77,6 @@
     "@adonisjs/hash": "8.3.1-9"
   },
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   }
 }
