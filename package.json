@@ -5,8 +5,8 @@
   "type": "module",
   "license": "UNLICENSED",
   "scripts": {
-    "build": "node --trace-warnings ace build",
     "start": "node build/bin/server.js",
+    "build": "tsc && node copy-start-files.js",
     "dev": "node ace serve --hmr",
     "test": "node ace test",
     "lint": "eslint .",
@@ -75,8 +75,5 @@
   "prettier": "@adonisjs/prettier-config",
   "overrides": {
     "@adonisjs/hash": "8.3.1-9"
-  },
-  "engines": {
-    "node": "22.x"
   }
 }

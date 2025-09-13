@@ -19,9 +19,7 @@
 /**
  * Register hook to process TypeScript files using ts-node
  */
-import 'ts-node-maintained/register/esm'
+import 'reflect-metadata'
+import { Ignitor } from '@adonisjs/core'
 
-/**
- * Import ace console entrypoint
- */
-await import('./bin/console.js')
+await new Ignitor(import.meta.url).ace()
