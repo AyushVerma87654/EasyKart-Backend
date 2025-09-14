@@ -79,7 +79,7 @@ export default class UsersController {
       const accessToken = createToken(decoded.id, decoded.email, ACCESSTOKEN)
       const user = await User.updateOrCreate({ id: decoded.id }, { accessToken })
       return response.json({ responseDetails: { user, accessToken } })
-    } catch (error) {
+    } catch (error: any) {
       if (error.name === 'TokenExpiredError') return response.json({ message: 'Token Expired' })
       else if (error.name === 'JsonWebTokenError')
         return response.json({ message: 'Invalid Token' })

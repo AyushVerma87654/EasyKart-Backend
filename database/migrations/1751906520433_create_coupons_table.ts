@@ -1,6 +1,6 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
-export default class extends BaseSchema {
+export default class CreateCouponsTable extends BaseSchema {
   protected tableName = 'coupons'
 
   async up() {

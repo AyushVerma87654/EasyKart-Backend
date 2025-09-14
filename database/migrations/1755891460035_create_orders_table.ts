@@ -1,7 +1,7 @@
 import { OrderStatus } from '#models/order'
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
-export default class extends BaseSchema {
+export default class CreateOrdersTable extends BaseSchema {
   protected tableName = 'orders'
 
   async up() {

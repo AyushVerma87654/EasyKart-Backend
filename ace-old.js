@@ -19,9 +19,19 @@
 /**
  * Register hook to process TypeScript files using ts-node
  */
-import 'ts-node-maintained/register/esm'
+import 'reflect-metadata'
+import { Ignitor } from '@adonisjs/core'
 
-/**
- * Import ace console entrypoint
- */
-await import('./bin/console.js')
+console.log('Starting Ace CLI...')
+
+const run = async () => {
+  try {
+    await new Ignitor(import.meta.url).ace()
+    console.log('Ace CLI finished successfully.')
+  } catch (error) {
+    console.error('Ace CLI failed:', error)
+    process.exit(1)
+  }
+}
+
+run()

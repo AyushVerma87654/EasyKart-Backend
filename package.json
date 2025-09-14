@@ -11,7 +11,10 @@
     "test": "node ace test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "migrate": "tsx ace.ts migration:run --force",
+    "migrate:rollback": "tsx ace.ts migration:rollback --batch=0",
+    "migrate:debug": "set DEBUG=adonis:* && tsx ace.ts migration:run --force"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
@@ -50,7 +53,10 @@
     "hot-hook": "^0.4.0",
     "pino-pretty": "^13.0.0",
     "prettier": "^3.5.3",
-    "typescript": "~5.6"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.5",
+    "typescript": "~5.6",
+    "ts-node-maintained": "^10.9.5"
   },
   "dependencies": {
     "@adonisjs/core": "^6.18.0",
