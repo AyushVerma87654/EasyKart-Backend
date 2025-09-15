@@ -1,9 +1,11 @@
 import env from '#start/env'
 import { defineConfig } from '@adonisjs/lucid'
-import { join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { dirname } from 'node:path'
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url))
+const currentFileUrl = import.meta.url // ✅ This is a `file://` URL
+const __dirname = dirname(fileURLToPath(currentFileUrl)) // Local file path
+const __dirurl = pathToFileURL(__dirname + '/') // ✅ Convert back to URL for safe usage
 
 const dbConfig = defineConfig({
   connection: 'postgres',
@@ -18,7 +20,8 @@ const dbConfig = defineConfig({
       },
       migrations: {
         naturalSort: true,
-        paths: [join(__dirname, '../database/migrations')],
+        // ✅ Use `new URL(...)` to pass a proper file URL
+        paths: [new URL('../database/migrations', __dirurl).pathname],
       },
     },
   },
