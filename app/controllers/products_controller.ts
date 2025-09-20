@@ -38,4 +38,18 @@ export default class ProductsController {
       return response.json({ responseDetails: { message: "Didn't Find the Product" } })
     }
   }
+
+  public async getProductByIds({ request, response }: HttpContext) {
+    try {
+      const ids: number[] = request.input('ids')
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return response.badRequest({ message: 'Invalid or empty ids array' })
+      }
+
+      const savedData = await Product.query().whereIn('id', ids)
+      return response.json({ responseDetails: { products: savedData } })
+    } catch (error) {
+      return response.json({ responseDetails: { message: "Didn't Find the Product" } })
+    }
+  }
 }

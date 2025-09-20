@@ -22,6 +22,7 @@ router.get('/', async () => {
 
 router.post('/products', [ProductsController, 'getAllProducts'])
 router.get('/product/:id', [ProductsController, 'getProductById'])
+router.post('/products/bulk-fetch', [ProductsController, 'getProductByIds'])
 
 router.get('/coupon', [CouponsController, 'getCoupons'])
 router.get('/apply-coupon/:couponCode', [CouponsController, 'getDiscountPercentage'])
