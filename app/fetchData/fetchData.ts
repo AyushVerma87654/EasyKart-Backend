@@ -6,9 +6,11 @@ import { DateTime } from 'luxon'
 export const fetchAllProducts = async () => {
   const data = await getAllProducts()
   const validatedData = data.products.map((product: any) => validateData(product))
-
+  console.log('validatedData', validatedData[0])
+  console.log('type', typeof validatedData[0].price)
   try {
     await Product.updateOrCreateMany('id', validatedData)
+
     return data.total
   } catch (error: any) {
     console.log(error)
@@ -46,7 +48,7 @@ const validateData = (data: any) => {
     title: data.title,
     description: data.description,
     category: data.category,
-    price: data.price,
+    price: Number(data.price),
     discountPercentage: data.discountPercentage,
     rating: data.rating,
     stock: data.stock,

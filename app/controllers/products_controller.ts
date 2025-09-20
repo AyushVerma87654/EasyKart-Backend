@@ -41,7 +41,7 @@ export default class ProductsController {
 
   public async getProductByIds({ request, response }: HttpContext) {
     try {
-      const ids: number[] = request.input('ids')
+      const ids: number[] = request.body().ids
       if (!Array.isArray(ids) || ids.length === 0) {
         return response.badRequest({ message: 'Invalid or empty ids array' })
       }

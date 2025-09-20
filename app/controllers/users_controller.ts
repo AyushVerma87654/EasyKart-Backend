@@ -57,6 +57,7 @@ export default class UsersController {
       const refreshToken = createToken(user.id, user.email, REFRESHTOKEN)
       const accessToken = createToken(user.id, user.email, ACCESSTOKEN)
       await User.updateOrCreate({ id: user.id }, { accessToken, refreshToken })
+      await user.load('cart')
       return response
         .cookie('refreshToken', refreshToken, {
           httpOnly: true,
@@ -78,6 +79,7 @@ export default class UsersController {
       const decoded = jwt.verify(refreshToken, env.get('REFRESH_TOKEN_SECRET')) as JwtPayload
       const accessToken = createToken(decoded.id, decoded.email, ACCESSTOKEN)
       const user = await User.updateOrCreate({ id: decoded.id }, { accessToken })
+      await user.load('cart')
       return response.json({ responseDetails: { user, accessToken } })
     } catch (error: any) {
       if (error.name === 'TokenExpiredError') return response.json({ message: 'Token Expired' })

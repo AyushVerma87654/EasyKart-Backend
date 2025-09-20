@@ -18,7 +18,10 @@ export default class Cart extends BaseModel {
   @column()
   declare items: Record<number, CartItem>
 
-  @column()
+  @column({
+    prepare: (value: number) => JSON.stringify(value), // save as string
+    consume: (value: string) => JSON.parse(value), // read as number
+  })
   declare totalAmount: number
 
   @column.dateTime({ autoCreate: true })

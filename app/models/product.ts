@@ -14,7 +14,10 @@ export default class Product extends BaseModel {
   @column()
   declare category: string
 
-  @column()
+  @column({
+    prepare: (value: number) => JSON.stringify(value), // save as string
+    consume: (value: string) => JSON.parse(value), // read as number
+  })
   declare price: number
 
   @column({ columnName: 'discount_percentage' })

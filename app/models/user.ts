@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
-// import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
+import { BaseModel, column, hasOne } from '@adonisjs/lucid/orm'
+import Cart from './cart.js'
+import type { HasOne } from '@adonisjs/lucid/types/relations'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true, serializeAs: null })
@@ -39,5 +40,6 @@ export default class User extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   declare updatedAt: DateTime | null
 
-  // static accessToken = DbAccessTokensProvider.forModel(User)
+  @hasOne(() => Cart)
+  declare cart: HasOne<typeof Cart>
 }
