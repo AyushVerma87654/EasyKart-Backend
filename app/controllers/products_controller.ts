@@ -30,9 +30,9 @@ export default class ProductsController {
     }
   }
 
-  public async getProductById({ request, response }: HttpContext) {
+  public async getProductById({ params, response }: HttpContext) {
     try {
-      const savedData = await Product.findByOrFail('id', request.body().id)
+      const savedData = await Product.findByOrFail('id', params.id)
       return response.json({ responseDetails: { product: savedData } })
     } catch (error) {
       return response.json({ responseDetails: { message: "Didn't Find the Product" } })
