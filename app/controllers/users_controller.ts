@@ -204,4 +204,22 @@ export default class UsersController {
       return response.json({ message: 'Email is not registered' })
     }
   }
+
+  public async updateProfile({ request, response }: HttpContext) {
+    const userProfile = request.body().user
+    try {
+      const user = await User.findByOrFail('email', userProfile.email)
+      user.fullName = userProfile.fullName
+      user.userName = userProfile.userName
+      await user.save()
+      return response.json({
+        responseDetails: {
+          fullName: user.fullName,
+          userName: user.userName,
+        },
+      })
+    } catch (error) {
+      return response.json({ error })
+    }
+  }
 }
