@@ -3,19 +3,17 @@ import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class CartsController {
-  public async updateCart({ request, response }: HttpContext) {
+  public async editCart({ request, response }: HttpContext) {
     try {
       const user = await User.findByOrFail('email', request.body().email)
       try {
         const cart = (await Cart.findByOrFail('userId', user.id)).toJSON()
-        console.log('cart1', cart)
         const newItem: CartItem = {
           productId: request.body().id,
           price: request.body().price,
           quantity: request.body().quantity,
           amount: request.body().price * request.body().quantity,
         }
-        console.log('newItem', newItem)
         const newItems: { [x: number]: CartItem } =
           cart.items?.[newItem.productId]?.quantity > 0
             ? {
@@ -28,12 +26,8 @@ export default class CartsController {
                 },
               }
             : { ...cart.items, [newItem.productId]: newItem }
-        console.log('newItems', newItems)
         const newCart = { ...cart, totalAmount: cart.totalAmount + newItem.amount, items: newItems }
-        console.log('newCart', newCart)
-
         await Cart.updateOrCreate({ userId: user.id }, newCart)
-        console.log('cart2', cart)
         return response.json({
           responseDetails: { message: 'Data Updated Successfully 2', cart: newCart.items },
         })
@@ -49,11 +43,27 @@ export default class CartsController {
           items: { [newItem.productId]: newItem },
         }
         const cart = await Cart.updateOrCreate({ userId: user.id }, newCart.items)
-        console.log('cart3', cart)
         return response.json({
           responseDetails: { message: 'Data Updated Successfully', cart },
         })
       }
+    } catch (error) {
+      console.log('errror4', error)
+      return response.json({ responseDetails: { error } })
+    }
+  }
+  public async deleteCartItem({ request, response }: HttpContext) {
+    try {
+      const user = await User.findByOrFail('email', request.body().email)
+      const cart = await Cart.findByOrFail('userId', user.id)
+      const productId: number = request.body().id
+      const items = cart.items
+      delete items[productId]
+      cart.items = items
+      await cart.save()
+      return response.json({
+        responseDetails: { message: 'Data Updated Successfully 2', cart: cart.items },
+      })
     } catch (error) {
       console.log('errror4', error)
       return response.json({ responseDetails: { error } })

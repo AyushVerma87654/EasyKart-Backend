@@ -36,6 +36,7 @@ router.post('/sendMail', [UsersController, 'sendMail'])
 router.post('/codeVerification', [UsersController, 'codeVerification'])
 router.post('/resetPassword', [UsersController, 'resetPassword'])
 
-router.post('/cart/update', [CartsController, 'updateCart'])
+router.post('/cart/edit-cart', [CartsController, 'editCart'])
+router.post('/cart/delete-cart-item', [CartsController, 'deleteCartItem'])
 
 router.get('/updateData', [AdminController, 'updateData'])
