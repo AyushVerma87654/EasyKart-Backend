@@ -11,6 +11,9 @@ export default class Coupon extends BaseModel {
   @column()
   declare discountPercentage: number
 
+  @column()
+  declare imageUrl: string
+
   @column.dateTime()
   declare expiresAt: DateTime
 

@@ -8,6 +8,7 @@ export default class CreateCouponsTable extends BaseSchema {
       table.increments('id')
       table.string('coupon_code').unique()
       table.integer('discount_percentage')
+      table.string('image_url')
       table.timestamp('expires_at')
       table.boolean('is_active')
       table.timestamp('created_at')

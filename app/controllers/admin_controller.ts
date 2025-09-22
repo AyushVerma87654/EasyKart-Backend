@@ -5,7 +5,7 @@ export default class AdminController {
   public async updateData({ response }: HttpContext) {
     try {
       await fetchAllProducts()
-      // saveCouponTableData()
+      await saveCouponTableData()
       return response.json({ responseDetails: { message: 'Data Updated Successfully' } })
     } catch (error) {
       return response.json({ responseDetails: { error } })
