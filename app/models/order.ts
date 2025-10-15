@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import { type HasMany } from '@adonisjs/lucid/types/relations'
+import OrderItem from './order_item.js'
 
 export enum OrderStatus {
   PENDING = 'pending',
@@ -7,12 +9,6 @@ export enum OrderStatus {
   SHIPPED = 'shipped',
   DELIVERED = 'delivered',
   CANCELLED = 'cancelled',
-}
-
-export interface OrderItem {
-  productId: number
-  quantity: number
-  price: number
 }
 
 export default class Order extends BaseModel {
@@ -23,23 +19,35 @@ export default class Order extends BaseModel {
   declare userId: number
 
   @column()
-  declare items: Record<string, OrderItem>
+  declare orderReference: string
 
   @column()
   declare totalAmount: number
 
   @column()
+  declare discountPercentage?: number
+
+  @column()
+  declare discountAmount?: number
+
+  @column()
+  declare finalAmount: number
+
+  @column()
+  declare couponCode?: string
+
+  @column()
+  declare paymentMethod: string
+
+  @column()
   declare status: OrderStatus
-
-  @column()
-  declare couponCode?: string | null
-
-  @column()
-  declare discountAmount: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @hasMany(() => OrderItem)
+  declare items: HasMany<typeof OrderItem>
 }

@@ -10,7 +10,6 @@ export default class CreateUsersTable extends BaseSchema {
       table.string('user_name')
       table.string('email').unique()
       table.string('password')
-      table.string('access_token')
       table.string('refresh_token')
       table.boolean('is_verified')
       table.boolean('is_updating_profile')

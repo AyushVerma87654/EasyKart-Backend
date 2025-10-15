@@ -3,12 +3,22 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class CouponsController {
   public async getCoupons({ response }: HttpContext) {
-    const data = await Coupon.query()
-    response.json({ responseDetails: { coupons: data } })
+    try {
+      const activeCoupons = await Coupon.query().where('is_active', true)
+      response.json({ responseDetails: { coupons: activeCoupons } })
+    } catch (error) {
+      response.json({ responseDetails: { error } })
+    }
   }
 
   public async getDiscountPercentage({ params, response }: HttpContext) {
-    const data = await Coupon.findByOrFail('coupon_code', params.couponCode)
-    response.json({ responseDetails: { discountPercentage: data.discountPercentage } })
+    try {
+      const data = await Coupon.findByOrFail('coupon_code', params.couponCode)
+      if (data.isActive)
+        response.ok({ responseDetails: { discountPercentage: data.discountPercentage } })
+      else response.unauthorized({ responseDetails: { message: 'Coupon is not active' } })
+    } catch (error) {
+      response.unauthorized({ error })
+    }
   }
 }

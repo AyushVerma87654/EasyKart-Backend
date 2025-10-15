@@ -35,7 +35,7 @@ export default class UsersController {
       })
       const refreshToken = createToken(user.id, user.email, REFRESHTOKEN)
       const accessToken = createToken(user.id, user.email, ACCESSTOKEN)
-      await User.updateOrCreate({ id: user.id }, { accessToken, refreshToken })
+      await User.updateOrCreate({ id: user.id }, { refreshToken })
       return response
         .cookie('refreshToken', refreshToken, {
           httpOnly: true,
@@ -56,7 +56,7 @@ export default class UsersController {
       if (!isMatch) return response.json({ message: 'Invalid Credentials' })
       const refreshToken = createToken(user.id, user.email, REFRESHTOKEN)
       const accessToken = createToken(user.id, user.email, ACCESSTOKEN)
-      await User.updateOrCreate({ id: user.id }, { accessToken, refreshToken })
+      await User.updateOrCreate({ id: user.id }, { refreshToken })
       await user.load('cart')
       return response
         .cookie('refreshToken', refreshToken, {
@@ -74,11 +74,13 @@ export default class UsersController {
 
   public async me({ request, response }: HttpContext) {
     const refreshToken = request.cookie('refreshToken')
-    console.log('refreshToken', refreshToken)
+    if (!refreshToken) {
+      return response.status(401).json({ message: 'No refresh token provided' })
+    }
     try {
       const decoded = jwt.verify(refreshToken, env.get('REFRESH_TOKEN_SECRET')) as JwtPayload
       const accessToken = createToken(decoded.id, decoded.email, ACCESSTOKEN)
-      const user = await User.updateOrCreate({ id: decoded.id }, { accessToken })
+      const user = await User.findByOrFail({ id: decoded.id })
       await user.load('cart')
       return response.json({ responseDetails: { user, accessToken } })
     } catch (error: any) {
@@ -97,15 +99,14 @@ export default class UsersController {
 
   public async deleteAccount({ request, response }: HttpContext) {
     try {
-      console.log('request.body().email', request.body().email)
-      const user = await User.findByOrFail('email', request.body().email)
-      console.log('user', user)
-      if (user.refreshToken === request.cookie('refreshToken')) {
-        user.delete()
-        return response
-          .clearCookie('refreshToken', { path: '/' })
-          .json({ responseDetails: { message: 'User Deleted Successfully' } })
-      } else return response.json({ responseDetails: { message: 'Unauthorized' } })
+      const user = request.authUser
+      if (!user) {
+        return response.unauthorized({ message: 'User not authenticated' })
+      }
+      await user.delete()
+      return response
+        .clearCookie('refreshToken', { path: '/' })
+        .json({ responseDetails: { message: 'User Deleted Successfully' } })
     } catch (err) {
       return response.json({ responseDetails: { message: 'Email is not registered' } })
     }
@@ -142,7 +143,6 @@ export default class UsersController {
   }
 
   public async codeVerification({ request, response }: HttpContext) {
-    console.log('codeverify')
     const validatedData = await request.validateUsing(verifyCodeValidator)
     try {
       const user = await User.findByOrFail('email', validatedData.email)
@@ -152,7 +152,7 @@ export default class UsersController {
           const accessToken = createToken(user.id, user.email, ACCESSTOKEN)
           await User.updateOrCreate(
             { email: user.email },
-            { accessToken, refreshToken, isUpdatingProfile: false, verificationCode: '' }
+            { refreshToken, isUpdatingProfile: false, verificationCode: '' }
           )
           return response
             .cookie('refreshToken', refreshToken, {
@@ -162,7 +162,7 @@ export default class UsersController {
               path: '/',
               maxAge: 60 * 60 * 24 * 7,
             })
-            .json({ responseDetails: { message: 'Code Verified' } })
+            .json({ responseDetails: { message: 'Code Verified', accessToken } })
         } catch (error) {
           return response
             .status(500)
@@ -180,37 +180,34 @@ export default class UsersController {
 
   public async resetPassword({ request, response }: HttpContext) {
     const validatedData = await request.validateUsing(resetPasswordValidator)
-    const refreshToken = request.cookie('refreshToken')
-    console.log('refreshToken', refreshToken)
     try {
-      const user = await User.findByOrFail('email', validatedData.email)
-      const decoded = jwt.verify(refreshToken, env.get('REFRESH_TOKEN_SECRET')) as JwtPayload
-      console.log('decoded', decoded)
-      if (user.id === decoded.id && user.email === decoded.email) {
-        const hashPassword = await hash.make(validatedData.password)
-        user.password = hashPassword
-        user.save()
-        return response.json({
-          responseDetails: {
-            message: 'Password Changed Successfully',
-            user,
-            accessToken: user.accessToken,
-          },
-        })
-      } else {
-        return response.json({ responseDetails: { message: 'Refresh Token Expired' } })
+      const user = request.authUser
+      if (!user) {
+        return response.unauthorized({ message: 'User not authenticated' })
       }
+      const hashPassword = await hash.make(validatedData.password)
+      user.password = hashPassword
+      await user.save()
+      return response.json({
+        responseDetails: {
+          message: 'Password Changed Successfully',
+          user,
+        },
+      })
     } catch (error) {
-      return response.json({ message: 'Email is not registered' })
+      return response.json({ error })
     }
   }
 
   public async updateProfile({ request, response }: HttpContext) {
-    const userProfile = request.body().user
     try {
-      const user = await User.findByOrFail('email', userProfile.email)
-      user.fullName = userProfile.fullName
-      user.userName = userProfile.userName
+      const user = request.authUser
+      if (!user) {
+        return response.unauthorized({ message: 'User not authenticated' })
+      }
+      const userProfile = request.body()
+      user.fullName = userProfile.fullName ?? user.fullName
+      user.userName = userProfile.userName ?? user.userName
       await user.save()
       return response.json({
         responseDetails: {

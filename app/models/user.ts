@@ -4,7 +4,7 @@ import Cart from './cart.js'
 import type { HasOne } from '@adonisjs/lucid/types/relations'
 
 export default class User extends BaseModel {
-  @column({ isPrimary: true, serializeAs: null })
+  @column({ isPrimary: true })
   declare id: number
 
   @column()
@@ -27,9 +27,6 @@ export default class User extends BaseModel {
 
   @column({ serializeAs: null })
   declare verificationCode: string
-
-  @column({ serializeAs: null })
-  declare accessToken: string
 
   @column({ serializeAs: null })
   declare refreshToken: string
