@@ -8,8 +8,8 @@ import { defineConfig } from '@adonisjs/cors'
  */
 const corsConfig = defineConfig({
   enabled: true,
-  origin: ['http://localhost:4444', 'https://ayushverma.netlify.app'],
-  methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
+  origin: '*',
+  methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   headers: true,
   exposeHeaders: [],
   credentials: true,
