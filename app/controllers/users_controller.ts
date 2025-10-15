@@ -61,8 +61,8 @@ export default class UsersController {
       return response
         .cookie('refreshToken', refreshToken, {
           httpOnly: true,
-          sameSite: 'lax',
-          secure: false,
+          sameSite: 'none',
+          secure: true,
           path: '/',
           maxAge: 60 * 60 * 24 * 7,
         })
