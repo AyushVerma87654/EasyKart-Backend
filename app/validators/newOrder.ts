@@ -2,6 +2,7 @@ import vine from '@vinejs/vine'
 
 export const newOrderDetailsValidator = vine.compile(
   vine.object({
+    orderReference: vine.string(),
     totalAmount: vine.number(),
     couponCode: vine.string().optional(),
     paymentMethod: vine.enum(['cod']),

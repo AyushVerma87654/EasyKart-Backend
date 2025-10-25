@@ -3,6 +3,7 @@ import Order, { OrderStatus } from '#models/order'
 import OrderItem from '#models/order_item'
 import { newOrderDetailsValidator, newOrderItemsValidator } from '#validators/newOrder'
 import Coupon from '#models/coupon'
+import Cart from '#models/cart'
 
 export default class OrdersController {
   public async placeOrder({ request, response }: HttpContext) {
@@ -13,6 +14,11 @@ export default class OrdersController {
     try {
       const validatedOrderDetails = await request.validateUsing(newOrderDetailsValidator)
       const validatedOrderItems = await request.validateUsing(newOrderItemsValidator)
+      const isOrdered = await Order.findBy({
+        orderReference: validatedOrderDetails.orderReference,
+      })
+      if (isOrdered && isOrdered.userId > 0)
+        return response.json({ responseDetails: { message: 'Order already placed' } })
       let discountPercentage = 0
       if (validatedOrderDetails.couponCode) {
         const coupon = await Coupon.findByOrFail({ couponCode: validatedOrderDetails.couponCode })
@@ -23,6 +29,7 @@ export default class OrdersController {
       const order = (
         await Order.create({
           userId: user.id,
+          orderReference: validatedOrderDetails.orderReference,
           totalAmount: validatedOrderDetails.totalAmount,
           discountPercentage: discountPercentage,
           discountAmount: discountAmount,
@@ -45,6 +52,7 @@ export default class OrdersController {
           })
         )
       )
+      await Cart.updateOrCreate({ userId: user.id }, { items: {}, totalAmount: 0 })
       return response.status(201).json({ responseDetails: { order: { ...order, items } } })
     } catch (error: any) {
       return response
