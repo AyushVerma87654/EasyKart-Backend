@@ -26,11 +26,6 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
 
-  // DB_HOST: Env.schema.string({ format: 'host' }),
-  // DB_PORT: Env.schema.number(),
-  // DB_USER: Env.schema.string(),
-  // DB_PASSWORD: Env.schema.string.optional(),
-  // DB_DATABASE: Env.schema.string(),
   DATABASE_URL: Env.schema.string(),
 
   /*
@@ -44,4 +39,14 @@ export default await Env.create(new URL('../', import.meta.url), {
   USER_NAME: Env.schema.string(),
   USER_EMAIL: Env.schema.string(),
   PASSWORD: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring stripe connection
+  |----------------------------------------------------------
+  */
+
+  STRIPE_SECRET_KEY: Env.schema.string(),
+  STRIPE_PUBLISHABLE_KEY: Env.schema.string(),
+  STRIPE_WEBHOOK_SECRET: Env.schema.string(),
 })

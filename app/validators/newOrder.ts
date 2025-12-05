@@ -5,7 +5,7 @@ export const newOrderDetailsValidator = vine.compile(
     orderReference: vine.string(),
     totalAmount: vine.number(),
     couponCode: vine.string().optional(),
-    paymentMethod: vine.enum(['cod']),
+    paymentMethod: vine.enum(['cod', 'stripe']),
   })
 )
 

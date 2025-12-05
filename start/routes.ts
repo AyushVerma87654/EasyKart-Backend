@@ -49,5 +49,10 @@ router
 
     router.post('/place-order', [OrdersController, 'placeOrder'])
     router.get('/fetch-order', [OrdersController, 'fetchOrder'])
+    router.post('/payment-checkout', [OrdersController, 'paymentCheckout'])
   })
   .use(middleware.auth())
+
+router
+  .post('/webhook/stripe', '#controllers/orders_controller.stripeWebhook')
+  .use(middleware.disableBodyParser())
